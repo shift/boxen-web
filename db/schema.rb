@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(:version => 20120927004840) do
 
   create_table "users", :force => true do |t|
     t.string   "login"
-    t.integer  "github_id"
+    t.integer  "bitbucket_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.string   "access_token"

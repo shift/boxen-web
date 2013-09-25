@@ -9,8 +9,9 @@ module Views
       end
 
       def endpoint
+        # https://bitbucket.org/sectionme/boxen-odobo/get/1.0.2.zip
         escaped_ref_name = CGI.escape(ref_name)
-        "#{github_api_url}/repos/#{repo_name}/tarball/#{escaped_ref_name}"
+        "#{bitbucket_api_url}/#{repo_name}/get/#{escaped_ref_name}.zip"
       end
 
       def download_url
@@ -37,9 +38,9 @@ module Views
         ENV['USER_ORG']
       end
 
-      def github_api_url
-        ghe_url = ENV['GITHUB_ENTERPRISE_URL']
-        ghe_url ? "#{ghe_url}/api/v3" : "https://api.github.com"
+      def bitbucket_api_url
+        ghe_url = ENV['BITBUCKET_ENTERPRISE_URL']
+        ghe_url ? "#{ghe_url}" : "https://bitbucket.com"
       end
     end
   end

@@ -4,14 +4,14 @@ class AuthController < ApplicationController
   def create
     if access?
       user = User.where(
-        :github_id => auth_hash['uid'],
+        :bitbucket_id => auth_hash['uid'],
         :login => auth_hash['info']['nickname']
       ).first_or_create
 
       user.access_token = auth_hash.credentials['token']
       user.save
 
-      session[:github_user_id] = auth_hash['uid']
+      session[:bitbucket_user_id] = auth_hash['uid']
       redirect_to session.delete(:return_to)
     else
       render :status => :forbidden, :text => "Forbidden"
@@ -20,14 +20,14 @@ class AuthController < ApplicationController
 
   def destroy
     session.clear
-    redirect_to (ENV['GITHUB_ENTERPRISE_URL'] || "https://github.com")
+    redirect_to (ENV['BITBUCKET_ENTERPRISE_URL'] || "https://bitbucket.com")
   end
 
   protected
 
-  def github_api_url
-    ghe_url = ENV['GITHUB_ENTERPRISE_URL']
-    ghe_url ? "#{ghe_url}/api/v3" : "https://api.github.com"
+  def bitbucket_api_url
+    ghe_url = ENV['BITBUCKET_ENTERPRISE_URL']
+    ghe_url ? "#{ghe_url}/api/v3" : "https://api.bitbucket.com"
   end
 
   def auth_hash
@@ -41,12 +41,12 @@ class AuthController < ApplicationController
   end
 
   def check_team_access?
-    !ENV['GITHUB_TEAM_ID'].nil?
+    !ENV['BITBUCKET_TEAM_ID'].nil?
   end
 
   def team_access?
-    host   = github_api_url
-    path   = "/teams/#{ENV['GITHUB_TEAM_ID']}/members"
+    host   = bitbucket_api_url
+    path   = "/teams/#{ENV['BITBUCKET_TEAM_ID']}/members"
     params = "access_token=#{auth_hash.credentials['token']}"
     uri    = URI.parse("#{host}#{path}?#{params}")
 
@@ -62,10 +62,10 @@ class AuthController < ApplicationController
   end
 
   def check_user_access?
-    !ENV['GITHUB_LOGIN'].nil?
+    !ENV['BITBUCKET_LOGIN'].nil?
   end
 
   def user_access?
-    ENV['GITHUB_LOGIN'] == auth_hash['info']['nickname']
+    ENV['BITBUCKET_LOGIN'] == auth_hash['info']['nickname']
   end
 end

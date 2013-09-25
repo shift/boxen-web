@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessible :github_id, :login
+  attr_accessible :bitbucket_id, :login
 
   def self.for_short_access_token(token)
     where("access_token LIKE ?", "#{token}%")
